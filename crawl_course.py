@@ -12,15 +12,13 @@ from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 
 
-
 # 과정리스트 로드
-course_list = pd.read_excel('시사점 과정리스트(231011)_차시.xlsx', header=3)
-course_list = course_list.drop(columns='Unnamed: 0')
-course_list.columns = ['대분류', '중분류', '소분류', '과정명', '학습시간']
+course_list = pd.read_csv('course_list_231018.csv', index_col=0)
 
 # 브라우저 꺼짐 방지 옵션
 chrome_options = Options()
 chrome_options.add_experimental_option("detach", True)
+chrome_options.add_argument('--start-maximized')
 
 driver = webdriver.Chrome(options=chrome_options)
 
@@ -39,8 +37,19 @@ driver.find_element(By.NAME, 'PW').send_keys('q1w2e3^@!@')
 driver.find_element(By.CLASS_NAME, 'btn-login').click()
 time.sleep(1)
 
-c = 12
-for c in range(course_list.shape[0]):
+
+# 어디까지 완료됐는지 체크
+found = False
+n_c = 0
+while found is False:
+    if course_list['수료여부'][n_c] == '수료':
+        n_c += 1
+    else:
+        found = True
+course_name = course_list['과정명'][n_c]
+
+for c in range(course_list.shape[0]-n_c):
+    c += n_c
     url_studying = 'https://gie.hunet.co.kr/Classroom/Studying'
     driver.get(url_studying)
     time.sleep(5)
@@ -64,7 +73,12 @@ for c in range(course_list.shape[0]):
         window_list = driver.window_handles
         driver.switch_to.window(window_list[1])
 
-        webdriver.ActionChains(driver).send_keys(Keys.ENTER).perform()
+        # webdriver.ActionChains(driver).send_keys(Keys.ENTER).perform()
+        try:
+            driver.switch_to.alert.accept()
+        except:
+            pass
+        driver.switch_to.window(window_list[1])
 
         # video spdup
         pyautogui.moveTo(200, 250, duration=0.5)
