@@ -1,3 +1,5 @@
+import os
+import sys
 import time
 import re
 
@@ -13,12 +15,15 @@ from bs4 import BeautifulSoup
 
 
 # 과정리스트 로드
-course_list = pd.read_csv('course_list_231018.csv', index_col=0)
+filename = [x for x in os.listdir() if x.startswith('course_list')]
+course_list = pd.read_csv(filename[-1], index_col=0)
 
 # 브라우저 꺼짐 방지 옵션
 chrome_options = Options()
 chrome_options.add_experimental_option("detach", True)
-chrome_options.add_argument('--start-maximized')
+chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
+if sys.platform == 'darwin':
+    chrome_options.add_argument('--start-maximized')
 
 driver = webdriver.Chrome(options=chrome_options)
 
@@ -26,6 +31,7 @@ driver = webdriver.Chrome(options=chrome_options)
 url_home = 'https://gie.hunet.co.kr/Home'
 driver.get(url_home)
 
+driver.find_element(By.ID, 'Pop_14631').find_element(By.CLASS_NAME, 'iCheckbox').click()
 driver.find_element(By.ID, 'Pop_14626').find_element(By.CLASS_NAME, 'iCheckbox').click()
 driver.find_element(By.ID, 'Pop_14602').find_element(By.CLASS_NAME, 'iCheckbox').click()
 driver.find_element(By.ID, 'Pop_14171').find_element(By.CLASS_NAME, 'iCheckbox').click()
@@ -47,44 +53,53 @@ while found is False:
     else:
         found = True
 course_name = course_list['과정명'][n_c]
+c = 30
 
-for c in range(course_list.shape[0]-n_c):
-    c += n_c
-    url_studying = 'https://gie.hunet.co.kr/Classroom/Studying'
-    driver.get(url_studying)
+# for c in range(course_list.shape[0]-n_c):
+    # c += n_c
+
+url_studying = 'https://gie.hunet.co.kr/Classroom/Studying'
+driver.get(url_studying)
+time.sleep(5)
+
+soup = BeautifulSoup(driver.page_source, 'html.parser')
+
+# course_table = soup.select('tr')
+# course_table.remove(course_table[0])
+
+course_row = soup.find(string=course_list['과정명'][c]).parent.parent.parent.parent
+if course_row.find(string='학습중') is not None:
+    course_key =  soup.find(string=course_list['과정명'][c]).parent.parent
+    url_keys = course_row.findAll('a')[1]['onclick']
+    url_keys = re.findall('"([^"]*)"', url_keys)
+    url_study = f'http://study.hunet.co.kr/StudyLoadingCheck.aspx?processType={url_keys[0]}&courseType={url_keys[1]}&processCd={url_keys[2]}&studyProcessYear={url_keys[3]}&studyProcessTerm={url_keys[4]}&courseCd={url_keys[5]}&userId={url_keys[6]}&companySeq={url_keys[7]}&adminYn={url_keys[8]}&nextUrl={url_keys[9]}&returnUrl={url_keys[10]}'
+    driver.get(url_study)
+    driver.find_element(By.CLASS_NAME, 'btn.btn-study-sm.btn-primary').click()
     time.sleep(5)
 
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    # switch window
+    window_list = driver.window_handles
+    driver.switch_to.window(window_list[1])
+    time.sleep(3)
 
-    # course_table = soup.select('tr')
-    # course_table.remove(course_table[0])
+    # alert accept (continue video)
+    try:
+        driver.switch_to.alert.accept()
+    except:
+        pass
+    driver.switch_to.window(window_list[1])
 
-    course_row = soup.find(string=course_list['과정명'][c]).parent.parent.parent.parent
-    if course_row.find(string='학습중') is not None:
-        course_key =  soup.find(string=course_list['과정명'][c]).parent.parent
-        url_keys = course_row.findAll('a')[1]['onclick']
-        url_keys = re.findall('"([^"]*)"', url_keys)
-        url_study = f'http://study.hunet.co.kr/StudyLoadingCheck.aspx?processType={url_keys[0]}&courseType={url_keys[1]}&processCd={url_keys[2]}&studyProcessYear={url_keys[3]}&studyProcessTerm={url_keys[4]}&courseCd={url_keys[5]}&userId={url_keys[6]}&companySeq={url_keys[7]}&adminYn={url_keys[8]}&nextUrl={url_keys[9]}&returnUrl={url_keys[10]}'
-        driver.get(url_study)
-        driver.find_element(By.CLASS_NAME, 'btn.btn-study-sm.btn-primary').click()
-        time.sleep(10)
-
-        # switch window & continue studying
-        window_list = driver.window_handles
-        driver.switch_to.window(window_list[1])
-
-        # webdriver.ActionChains(driver).send_keys(Keys.ENTER).perform()
-        try:
-            driver.switch_to.alert.accept()
-        except:
-            pass
-        driver.switch_to.window(window_list[1])
-
-        # video spdup
-        pyautogui.moveTo(200, 250, duration=0.5)
+    # 플레이어 종류가 두 가지임. 체크
+    try:    # iframe
+        driver.find_element(By.TAG_NAME, 'iframe')
+        # video spdup (비디오 멈추기 -> 배속버튼 생기게 한 후 배속 올리기 -> 비디오 재생 )
+        driver.find_element(By.ID, 'main').click()
+        driver.switch_to.frame("main")
         for i in range(10):
-            pyautogui.moveTo(200+i%2, 250+i%2, duration=0.5)
-            pyautogui.click()
-            time.sleep(0.5)
-
-        # 비디오 속도 올리는 버튼 위치 (200, 250)
+            driver.find_element(By.ID, 'video_dock_spdUp').click()
+            time.sleep(0.05)
+        driver.switch_to.default_content()
+        driver.find_element(By.ID, 'main').click()
+    except: # frame 
+        
+        
