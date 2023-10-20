@@ -25,6 +25,7 @@ driver = webdriver.Chrome(options=chrome_options)
 url_home = 'https://gie.hunet.co.kr/Home'
 driver.get(url_home)
 
+driver.find_element(By.ID, 'Pop_14631').find_element(By.CLASS_NAME, 'iCheckbox').click()
 driver.find_element(By.ID, 'Pop_14626').find_element(By.CLASS_NAME, 'iCheckbox').click()
 driver.find_element(By.ID, 'Pop_14602').find_element(By.CLASS_NAME, 'iCheckbox').click()
 driver.find_element(By.ID, 'Pop_14171').find_element(By.CLASS_NAME, 'iCheckbox').click()
@@ -37,7 +38,14 @@ driver.find_element(By.CLASS_NAME, 'btn-login').click()
 time.sleep(1)
 
 # 과정리스트 로드
-course_list = pd.read_csv('course_list_231018.csv', index_col=0)
+# course_list = pd.read_csv('course_list_231018.csv', index_col=0)
+course_list = pd.read_excel('시사점 과정리스트(231011)_차시.xlsx', header=3)
+course_list = course_list.drop(columns=['Unnamed: 0'])
+course_list.columns = ['대분류', '중분류', '소분류', '과정명', '학습시간']
+check = []
+for i in range(course_list.shape[0]):
+    check.append(i)
+course_list['수료여부'] = check
 
 # 어디까지 완료됐는지 체크
 url_studying = 'https://gie.hunet.co.kr/Classroom/Studying'
@@ -52,7 +60,16 @@ for n_l in range(course_list.shape[0]):
         if found is not None:
             print(course_table[n_t].find(string=course_list['과정명'][n_l]), n_t)
             comp = course_table[n_t].find(string=course_list['과정명'][n_l]).parent.parent.parent.parent.findAll('strong')[-1]
-            course_list['수료여부'][n_l] = comp.string
+            if comp.string == '수료':
+                course_list['수료여부'][n_l] = True
+            else:
+                course_list['수료여부'][n_l] = False
 
-course_list.to_csv(f'course_list_{time.strftime("%y%m%d")}.csv')
+drop = []
+for n_l in range(course_list.shape[0]):
+    if type(course_list['수료여부'][n_l]) != type(True):
+        drop.append(n_l)
+course_list = course_list.drop(index=drop)
+
+course_list.to_csv(f'course_list_{time.strftime("%y%m%d")}.csv', encoding='utf-8-sig')
 

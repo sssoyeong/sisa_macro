@@ -10,6 +10,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import WebDriverWait
 
 from bs4 import BeautifulSoup
 
@@ -38,7 +40,7 @@ driver.find_element(By.ID, 'Pop_14171').find_element(By.CLASS_NAME, 'iCheckbox')
 driver.find_element(By.ID, 'Pop_11243').find_element(By.CLASS_NAME, 'iCheckbox').click()
 time.sleep(1)
 
-driver.find_element(By.NAME, 'ID').send_keys('cloudfishh')
+driver.find_element(By.NAME, 'ID').send_keys('soyeongp')
 driver.find_element(By.NAME, 'PW').send_keys('q1w2e3^@!@')
 driver.find_element(By.CLASS_NAME, 'btn-login').click()
 time.sleep(1)
@@ -53,53 +55,71 @@ while found is False:
     else:
         found = True
 course_name = course_list['과정명'][n_c]
-c = 30
+c = 468
 
-# for c in range(course_list.shape[0]-n_c):
-    # c += n_c
+for c in range(course_list.shape[0]-n_c):
+    c += n_c
 
-url_studying = 'https://gie.hunet.co.kr/Classroom/Studying'
-driver.get(url_studying)
-time.sleep(5)
-
-soup = BeautifulSoup(driver.page_source, 'html.parser')
-
-# course_table = soup.select('tr')
-# course_table.remove(course_table[0])
-
-course_row = soup.find(string=course_list['과정명'][c]).parent.parent.parent.parent
-if course_row.find(string='학습중') is not None:
-    course_key =  soup.find(string=course_list['과정명'][c]).parent.parent
-    url_keys = course_row.findAll('a')[1]['onclick']
-    url_keys = re.findall('"([^"]*)"', url_keys)
-    url_study = f'http://study.hunet.co.kr/StudyLoadingCheck.aspx?processType={url_keys[0]}&courseType={url_keys[1]}&processCd={url_keys[2]}&studyProcessYear={url_keys[3]}&studyProcessTerm={url_keys[4]}&courseCd={url_keys[5]}&userId={url_keys[6]}&companySeq={url_keys[7]}&adminYn={url_keys[8]}&nextUrl={url_keys[9]}&returnUrl={url_keys[10]}'
-    driver.get(url_study)
-    driver.find_element(By.CLASS_NAME, 'btn.btn-study-sm.btn-primary').click()
+    url_studying = 'https://gie.hunet.co.kr/Classroom/Studying'
+    driver.get(url_studying)
     time.sleep(5)
 
-    # switch window
-    window_list = driver.window_handles
-    driver.switch_to.window(window_list[1])
-    time.sleep(3)
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-    # alert accept (continue video)
-    try:
-        driver.switch_to.alert.accept()
-    except:
-        pass
-    driver.switch_to.window(window_list[1])
+    course_row = soup.find(string=course_list['과정명'][c]).parent.parent.parent.parent
+    if course_row.find(string='학습중') is not None:
+        keep_course = True
+        course_key =  soup.find(string=course_list['과정명'][c]).parent.parent
+        url_keys = course_row.findAll('a')[1]['onclick']
+        url_keys = re.findall('"([^"]*)"', url_keys)
+        url_study = f'http://study.hunet.co.kr/StudyLoadingCheck.aspx?processType={url_keys[0]}&courseType={url_keys[1]}&processCd={url_keys[2]}&studyProcessYear={url_keys[3]}&studyProcessTerm={url_keys[4]}&courseCd={url_keys[5]}&userId={url_keys[6]}&companySeq={url_keys[7]}&adminYn={url_keys[8]}&nextUrl={url_keys[9]}&returnUrl={url_keys[10]}'
+        driver.get(url_study)
 
-    # 플레이어 종류가 두 가지임. 체크
-    try:    # iframe
-        driver.find_element(By.TAG_NAME, 'iframe')
-        # video spdup (비디오 멈추기 -> 배속버튼 생기게 한 후 배속 올리기 -> 비디오 재생 )
-        driver.find_element(By.ID, 'main').click()
-        driver.switch_to.frame("main")
-        for i in range(10):
-            driver.find_element(By.ID, 'video_dock_spdUp').click()
-            time.sleep(0.05)
-        driver.switch_to.default_content()
-        driver.find_element(By.ID, 'main').click()
-    except: # frame 
-        
+        while keep_course is True:
+            driver.find_element(By.CLASS_NAME, 'btn.btn-study-sm.btn-primary').click()
+            time.sleep(5)
+
+            # switch window
+            window_list = driver.window_handles
+            driver.switch_to.window(window_list[1])
+            time.sleep(2)
+
+            # alert accept (continue video)
+            try:
+                driver.switch_to.alert.accept()
+            except:
+                pass
+            driver.switch_to.window(window_list[1])
+
+            # 플레이어 종류가 두 가지임. iframe인 경우만 진행하는 걸로...
+            try:    # iframe
+                driver.find_element(By.TAG_NAME, 'iframe')
+                # video spdup (비디오 멈추기 -> 배속버튼 생기게 한 후 배속 올리기 -> 비디오 재생 )
+                driver.find_element(By.ID, 'main').click()
+                driver.switch_to.frame("main")
+                for i in range(10):
+                    driver.find_element(By.ID, 'video_dock_spdUp').click()
+                    time.sleep(0.05)
+                driver.switch_to.default_content()
+                driver.find_element(By.ID, 'main').click()  # 재생시작
+
+                # <다음 차시로 이동하겠습니까?> alert 기다림
+                wait_alert = WebDriverWait(driver, 1800)      # 30mins = 1800secs
+                alert_switch = wait_alert.until(expected_conditions.alert_is_present())
+                driver.switch_to.alert().accept()
+                driver.switch_to.window(window_list[1])
+                driver.close()
+                driver.switch_to.window(window_list[0])
+                driver.refresh()
+
+                # <학습하기> 창에서 진도율 체크
+                score_ing = driver.find_element(By.CLASS_NAME, 'num0').text
+                score_fin = driver.find_element(By.CLASS_NAME, 'text-legend').text
+                score_ing = re.sub(r'[^0-9]', '', score_ing)
+                score_fin = re.sub(r'[^0-9]', '', score_fin)
+                if score_ing >= score_fin:
+                    keep_course = False
+
+            except: # frame 
+                pass
         
