@@ -38,7 +38,8 @@ driver.find_element(By.CLASS_NAME, 'btn-login').click()
 time.sleep(1)
 
 # 과정리스트 로드
-course_list = pd.read_csv('course_list_prognostics_check.csv', index_col=0)
+course_list = pd.read_csv('course_list_231025_frame.csv', index_col=0)
+# course_list = pd.read_csv('course_list_prognostics_check.csv', index_col=0)
 # course_list = pd.read_csv('course_list_231018.csv', index_col=0)
 # course_list = pd.read_excel('시사점 과정리스트(231011)_차시.xlsx', header=3)
 # course_list = course_list.drop(columns=['Unnamed: 0'])
@@ -109,8 +110,9 @@ course_list.to_csv('course_list_prognostics_check.csv', encoding='utf-8-sig')
 
 # frame 체크
 frame = []
-skip = 282
-for cc in range(course_list.shape[0]-skip):
+skip = 182
+# for cc in range(course_list.shape[0]-skip):
+for cc in range(182-skip):
     cc += skip
     c = course_list.index[cc]
     if course_list['prognostics'][c] == False:
@@ -158,5 +160,5 @@ print(frame)
 
 course_list['frame'] = frame
 
-course_list.to_csv(f'course_list_{time.strftime("%y%m%d")}_frame_3.csv', encoding='utf-8-sig')
+course_list.to_csv(f'course_list_{time.strftime("%y%m%d")}_frame_4.csv', encoding='utf-8-sig')
 

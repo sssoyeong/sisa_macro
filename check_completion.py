@@ -38,14 +38,14 @@ driver.find_element(By.CLASS_NAME, 'btn-login').click()
 time.sleep(1)
 
 # 과정리스트 로드
-# course_list = pd.read_csv('course_list_231018.csv', index_col=0)
-course_list = pd.read_excel('시사점 과정리스트(231011)_차시.xlsx', header=3)
-course_list = course_list.drop(columns=['Unnamed: 0'])
-course_list.columns = ['대분류', '중분류', '소분류', '과정명', '학습시간']
-check = []
-for i in range(course_list.shape[0]):
-    check.append(i)
-course_list['수료여부'] = check
+course_list = pd.read_csv('course_list_231025_frame_completion.csv', index_col=0)
+# course_list = pd.read_excel('시사점 과정리스트(231011)_차시.xlsx', header=3)
+# course_list = course_list.drop(columns=['Unnamed: 0'])
+# course_list.columns = ['대분류', '중분류', '소분류', '과정명', '학습시간']
+# check = []
+# for i in range(course_list.shape[0]):
+#     check.append(i)
+# course_list['수료여부'] = check
 
 # 어디까지 완료됐는지 체크
 url_studying = 'https://gie.hunet.co.kr/Classroom/Studying'

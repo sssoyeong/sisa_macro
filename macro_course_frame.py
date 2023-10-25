@@ -10,16 +10,12 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 
 from bs4 import BeautifulSoup
 
-
-# 과정리스트 로드
-# filename = [x for x in os.listdir() if x.startswith('course_list')]
-# course_list = pd.read_csv(filename[-1], index_col=0)
-course_list = pd.read_csv('course_list_231025_frame_completion.csv', index_col=0)
 
 # 브라우저 꺼짐 방지 옵션
 chrome_options = Options()
@@ -58,8 +54,12 @@ time.sleep(1)
 # course_name = course_list['과정명'][n_c]
 # c = 468
 
-# iframe만 남기기
-idx_drop = [i for i in course_list.index if (course_list['frame'][i] != 'iframe')|(course_list['수료여부'][i] == True)]
+# 과정리스트 로드
+# filename = [x for x in os.listdir() if x.startswith('course_list')]
+# course_list = pd.read_csv(filename[-1], index_col=0)
+course_list = pd.read_csv('course_list_231025_frame_completion.csv', index_col=0)
+# frame만 남기기
+idx_drop = [i for i in course_list.index if (course_list['frame'][i] != 'frame')|(course_list['수료여부'][i] != 'FALSE')]
 course_list = course_list.drop(index=idx_drop)
 
 # 마이페이지 리스트 긁어오기
@@ -94,15 +94,17 @@ for c in course_list.index:
             except:
                 pass
             driver.switch_to.window(window_list[1])
+            time.sleep(2)
 
-            # video spdup (비디오 멈추기 -> 배속버튼 생기게 한 후 배속 올리기 -> 비디오 재생 )
-            driver.find_element(By.ID, 'main').click()
+            # video spdup
             driver.switch_to.frame("main")
+            player_body = driver.find_element(By.ID, 'player_display')
+            player_button = driver.find_element(By.XPATH, '//*[@id="movieSpdUp"]')
+            driver.implicitly_wait(10)
             for i in range(10):
-                driver.find_element(By.ID, 'video_dock_spdUp').click()
+                ActionChains(driver).move_to_element(player_body).click(button).perform()
                 time.sleep(0.05)
             driver.switch_to.default_content()
-            driver.find_element(By.ID, 'main').click()  # 재생시작
 
             # <다음 차시로 이동하겠습니까?> alert 기다림
             wait_alert = WebDriverWait(driver, 1800)      # 30mins = 1800secs = 2배속이니까 1시간 분량 wait
@@ -113,17 +115,12 @@ for c in course_list.index:
             driver.switch_to.window(window_list[0])
             driver.refresh()    # <학습하기> 창 돌아와서 새로고침
 
-            # <학습을 모두 완료하셨습니다> 창 있으면 끄기
-            try:
-                driver.find_element(By.XPATH, '//*[@id="div_survey_alarm_Contents"]/a').click()
-            except:
-                pass
             # <학습하기> 창에서 진도율 체크
             score_ing = driver.find_element(By.CLASS_NAME, 'text-warning.number').text
             score_fin = driver.find_element(By.CLASS_NAME, 'text-legend').text
             score_ing = int(re.sub(r'[^0-9]', '', score_ing))
             score_fin = int(re.sub(r'[^0-9]', '', score_fin))
-            if score_ing >= score_fin:
-                keep_course = False
+            if score_ing < score_fin:
+                keep_course = True
 
 # driver.switch_to.window(driver.window_handles[0])
