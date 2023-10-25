@@ -104,21 +104,21 @@ for c in range(course_list.shape[0]-n_c):
                 driver.find_element(By.ID, 'main').click()  # 재생시작
 
                 # <다음 차시로 이동하겠습니까?> alert 기다림
-                wait_alert = WebDriverWait(driver, 1800)      # 30mins = 1800secs
+                wait_alert = WebDriverWait(driver, 1800)      # 30mins = 1800secs = 2배속이니까 1시간 분량 wait
                 alert_switch = wait_alert.until(expected_conditions.alert_is_present())
                 driver.switch_to.alert().accept()
                 driver.switch_to.window(window_list[1])
-                driver.close()
+                driver.close()      # 영상 창 close
                 driver.switch_to.window(window_list[0])
-                driver.refresh()
+                driver.refresh()    # <학습하기> 창 돌아와서 새로고침
 
                 # <학습하기> 창에서 진도율 체크
                 score_ing = driver.find_element(By.CLASS_NAME, 'num0').text
                 score_fin = driver.find_element(By.CLASS_NAME, 'text-legend').text
                 score_ing = re.sub(r'[^0-9]', '', score_ing)
                 score_fin = re.sub(r'[^0-9]', '', score_fin)
-                if score_ing >= score_fin:
-                    keep_course = False
+                if score_ing <= score_fin:
+                    keep_course = True
 
             except: # frame 
                 pass

@@ -109,7 +109,7 @@ course_list.to_csv('course_list_prognostics_check.csv', encoding='utf-8-sig')
 
 # frame 체크
 frame = []
-skip = 0
+skip = 214
 for cc in range(course_list.shape[0]-skip):
     cc += skip
     c = course_list.index[cc]
@@ -152,10 +152,11 @@ for cc in range(course_list.shape[0]-skip):
 
         driver.close()
         driver.switch_to.window(window_list[0])
+        print(course_list['과정명'][c], cc)
 
 print(frame)
 
 course_list['frame'] = frame
 
-course_list.to_csv(f'course_list_{time.strftime("%y%m%d")}.csv', encoding='utf-8-sig')
+course_list.to_csv(f'course_list_{time.strftime("%y%m%d")}_frame_1.csv', encoding='utf-8-sig')
 

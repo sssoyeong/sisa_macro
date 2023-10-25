@@ -71,5 +71,6 @@ for n_l in range(course_list.shape[0]):
         drop.append(n_l)
 course_list = course_list.drop(index=drop)
 
+
 course_list.to_csv(f'course_list_{time.strftime("%y%m%d")}.csv', encoding='utf-8-sig')
 
