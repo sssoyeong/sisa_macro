@@ -109,7 +109,7 @@ course_list.to_csv('course_list_prognostics_check.csv', encoding='utf-8-sig')
 
 # frame 체크
 frame = []
-skip = 214
+skip = 282
 for cc in range(course_list.shape[0]-skip):
     cc += skip
     c = course_list.index[cc]
@@ -158,5 +158,5 @@ print(frame)
 
 course_list['frame'] = frame
 
-course_list.to_csv(f'course_list_{time.strftime("%y%m%d")}_frame_1.csv', encoding='utf-8-sig')
+course_list.to_csv(f'course_list_{time.strftime("%y%m%d")}_frame_3.csv', encoding='utf-8-sig')
 
