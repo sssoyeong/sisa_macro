@@ -34,7 +34,6 @@ driver = webdriver.Chrome(options=chrome_options)
 url_home = 'https://gie.hunet.co.kr/Home'
 driver.get(url_home)
 
-driver.find_element(By.ID, 'Pop_14631').find_element(By.CLASS_NAME, 'iCheckbox').click()
 driver.find_element(By.ID, 'Pop_14626').find_element(By.CLASS_NAME, 'iCheckbox').click()
 driver.find_element(By.ID, 'Pop_14602').find_element(By.CLASS_NAME, 'iCheckbox').click()
 driver.find_element(By.ID, 'Pop_14171').find_element(By.CLASS_NAME, 'iCheckbox').click()
