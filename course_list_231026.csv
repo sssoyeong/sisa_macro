@@ -128,8 +128,8 @@
 131,정규강좌,정보화/IT,디지털 트랜스포메이션,[Tech briefing] 빅테크의 모든 것,4,TRUE,frame,FALSE
 132,정규강좌,취업,인생이모작,핵심만 콕! 재취업 준비와 성공전략,4,FALSE,iframe,FALSE
 133,정규강좌,생활/인문교양,인문,미술의 마음,4,TRUE,frame,FALSE
-134,정규강좌,생활/인문교양,취미,여행을 이야기하다,4,FALSE,frame,FALSE
-135,정규강좌,생활/인문교양,인문,"미술, 창조사회를 말하다",4,FALSE,135,FALSE
+134,정규강좌,생활/인문교양,취미,여행을 이야기하다,4,TRUE,frame,FALSE
+135,정규강좌,생활/인문교양,인문,"미술, 창조사회를 말하다",4,Pass,135,FALSE
 136,정규강좌,생활/인문교양,취미,인문학과 함께하는 비즈니스 트립,4,FALSE,frame,FALSE
 137,정규강좌,외국어,영어,스낵영어네이티브: The Travel 5.1 [중고급],4,FALSE,iframe,FALSE
 138,정규강좌,외국어,영어,스낵영어네이티브: The Travel 4.2 [중급],4,FALSE,iframe,FALSE
