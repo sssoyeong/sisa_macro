@@ -1,4 +1,5 @@
 import sys
+import time
 from datetime import date, timedelta
 import re
 
@@ -50,6 +51,8 @@ course_list = pd.read_csv(f'course_list_{yesterday.strftime("%y%m%d")}.csv', ind
 # 어디까지 완료됐는지 체크
 url_studying = 'https://gie.hunet.co.kr/Classroom/Studying'
 driver.get(url_studying)
+driver.implicitly_wait(10)
+
 soup = BeautifulSoup(driver.page_source, 'html.parser')
 course_table = soup.select('tr')
 course_table.remove(course_table[0])

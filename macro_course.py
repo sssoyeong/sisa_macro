@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import re
+from datetime import date, timedelta
 
 import pyautogui
 import pandas as pd
@@ -19,7 +20,8 @@ from bs4 import BeautifulSoup
 # 과정리스트 로드
 # filename = [x for x in os.listdir() if x.startswith('course_list')]
 # course_list = pd.read_csv(filename[-1], index_col=0)
-course_list = pd.read_csv('course_list_231025_frame_completion.csv', index_col=0)
+# course_list = pd.read_csv('course_list_231025_frame_completion.csv', index_col=0)
+course_list = pd.read_csv(f'course_list_{time.strftime("%y%m%d")}.csv', index_col=0)
 
 # 브라우저 꺼짐 방지 옵션
 chrome_options = Options()
@@ -45,18 +47,6 @@ driver.find_element(By.NAME, 'PW').send_keys('q1w2e3^@!@')
 driver.find_element(By.CLASS_NAME, 'btn-login').click()
 time.sleep(1)
 
-
-# # 어디까지 완료됐는지 체크
-# found = False
-# n_c = 0
-# while found is False:
-#     if course_list['수료여부'][n_c] == '수료':
-#         n_c += 1
-#     else:
-#         found = True
-# course_name = course_list['과정명'][n_c]
-# c = 468
-
 # iframe만 남기기
 idx_drop = [i for i in course_list.index if (course_list['frame'][i] != 'iframe')|(course_list['수료여부'][i] == True)]
 course_list = course_list.drop(index=idx_drop)
@@ -64,7 +54,7 @@ course_list = course_list.drop(index=idx_drop)
 # 마이페이지 리스트 긁어오기
 url_studying = 'https://gie.hunet.co.kr/Classroom/Studying'
 driver.get(url_studying)
-time.sleep(5)
+driver.implicitly_wait(10)
 
 soup = BeautifulSoup(driver.page_source, 'html.parser')
 
@@ -86,9 +76,11 @@ for c in course_list.index:
             window_list = driver.window_handles
             driver.switch_to.window(window_list[1])
             time.sleep(2)
+            print('window switched')
 
             # alert accept (continue video)
             try:
+                print('trying alert acception')
                 driver.switch_to.alert.accept()
             except:
                 pass
@@ -105,24 +97,49 @@ for c in course_list.index:
 
             # <다음 차시로 이동하겠습니까?> alert 기다림
             wait_alert = WebDriverWait(driver, 1800)      # 30mins = 1800secs = 2배속이니까 1시간 분량 wait
-            alert_switch = wait_alert.until(expected_conditions.alert_is_present())
-            driver.switch_to.alert.accept()
-            driver.switch_to.window(window_list[1])
-            driver.close()      # 영상 창 close
-            driver.switch_to.window(window_list[0])
-            driver.refresh()    # <학습하기> 창 돌아와서 새로고침
-
-            # <학습을 모두 완료하셨습니다> 창 있으면 끄기
             try:
-                driver.find_element(By.XPATH, '//*[@id="div_survey_alarm_Contents"]/a').click()
-            except:
-                pass
-            # <학습하기> 창에서 진도율 체크
-            score_ing = driver.find_element(By.CLASS_NAME, 'text-warning.number').text
-            score_fin = driver.find_element(By.CLASS_NAME, 'text-legend').text
-            score_ing = int(re.sub(r'[^0-9]', '', score_ing))
-            score_fin = int(re.sub(r'[^0-9]', '', score_fin))
-            if score_ing >= score_fin:
-                keep_course = False
+                alert_switch = wait_alert.until(expected_conditions.alert_is_present())
+                driver.switch_to.alert.accept()
+                driver.switch_to.window(window_list[1])
+                driver.close()      # 영상 창 close
+                driver.switch_to.window(window_list[0])
+                driver.refresh()    # <학습하기> 창 돌아와서 새로고침
+
+                # <학습을 모두 완료하셨습니다> 창 있으면 끄기
+                try:
+                    driver.find_element(By.XPATH, '//*[@id="div_survey_alarm_Contents"]/a').click()
+                except:
+                    pass
+                # <학습하기> 창에서 진도율 체크
+                score_ing = driver.find_element(By.CLASS_NAME, 'text-warning.number').text
+                score_fin = driver.find_element(By.CLASS_NAME, 'text-legend').text
+                score_ing = int(re.sub(r'[^0-9]', '', score_ing))
+                score_fin = int(re.sub(r'[^0-9]', '', score_fin))
+                if score_ing >= score_fin:
+                    keep_course = False
+            except:     # 30분 기다렸는데 alert 안 뜨면? 뭔가 영상 창에 문제가 생겼다거나? 일단 창을 끈다
+                try:
+                    driver.switch_to.alert.accept()     # alert 있으면 accept 해주고
+                    w_list = driver.window_handles
+                    if len(w_list) > 1:                       # 영상 창이 그대로 남아있으면 (창 개수가 2개면)
+                        driver.switch_to.window(w_list[1])    # 영상 창으로 switch
+                        driver.close()                        # 영상 창 close 
+                except:
+                    driver.close()                      # alert 없으면 그냥 window[1] 닫아준다
+                driver.switch_to.window(window_list[0])
+                driver.refresh()    # <학습하기> 창 돌아와서 새로고침
+
+                # <학습을 모두 완료하셨습니다> 창 있으면 끄기
+                try:
+                    driver.find_element(By.XPATH, '//*[@id="div_survey_alarm_Contents"]/a').click()
+                except:
+                    pass
+                # <학습하기> 창에서 진도율 체크
+                score_ing = driver.find_element(By.CLASS_NAME, 'text-warning.number').text
+                score_fin = driver.find_element(By.CLASS_NAME, 'text-legend').text
+                score_ing = int(re.sub(r'[^0-9]', '', score_ing))
+                score_fin = int(re.sub(r'[^0-9]', '', score_fin))
+                if score_ing >= score_fin:
+                    keep_course = False
 
 # driver.switch_to.window(driver.window_handles[0])

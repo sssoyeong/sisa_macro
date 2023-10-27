@@ -64,7 +64,7 @@ course_list = course_list.drop(index=idx_drop)
 # 마이페이지 리스트 긁어오기
 url_studying = 'https://gie.hunet.co.kr/Classroom/Studying'
 driver.get(url_studying)
-time.sleep(5)
+driver.implicitly_wait(10)
 
 soup = BeautifulSoup(driver.page_source, 'html.parser')
 
