@@ -48,7 +48,7 @@ driver.find_element(By.CLASS_NAME, 'btn-login').click()
 time.sleep(1)
 
 # iframe만 남기기
-idx_drop = [i for i in course_list.index if (course_list['frame'][i] != 'iframe')|(course_list['수료여부'][i] == True)]
+idx_drop = [i for i in course_list.index if (course_list['frame'][i] != 'iframe')|(course_list['수료여부'][i] == 'TRUE')]
 course_list = course_list.drop(index=idx_drop)
 
 # 마이페이지 리스트 긁어오기
