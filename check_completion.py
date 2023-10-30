@@ -74,3 +74,5 @@ for n_l in course_list.index:
 # course_list = course_list.drop(index=drop)
 
 course_list.to_csv(f'course_list_{date.today().strftime("%y%m%d")}.csv', encoding='utf-8-sig')
+
+driver.quit()

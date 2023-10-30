@@ -48,8 +48,9 @@ driver.find_element(By.CLASS_NAME, 'btn-login').click()
 time.sleep(1)
 
 # iframe만 남기기
-idx_drop = [i for i in course_list.index if (course_list['frame'][i] != 'iframe')|(course_list['수료여부'][i] == 'TRUE')]
+idx_drop = [i for i in course_list.index if (course_list['frame'][i] != 'iframe')|(course_list['수료여부'][i] != "FALSE")]
 course_list = course_list.drop(index=idx_drop)
+print(course_list.head(5))
 
 # 마이페이지 리스트 긁어오기
 url_studying = 'https://gie.hunet.co.kr/Classroom/Studying'
@@ -57,6 +58,8 @@ driver.get(url_studying)
 driver.implicitly_wait(10)
 
 soup = BeautifulSoup(driver.page_source, 'html.parser')
+driver.set_window_size(1000, 1100)
+driver.set_window_position(800, 50)
 
 for c in course_list.index:
     course_row = soup.find(string=course_list['과정명'][c]).parent.parent.parent.parent
@@ -67,6 +70,7 @@ for c in course_list.index:
         url_keys = re.findall('"([^"]*)"', url_keys)
         url_study = f'http://study.hunet.co.kr/StudyLoadingCheck.aspx?processType={url_keys[0]}&courseType={url_keys[1]}&processCd={url_keys[2]}&studyProcessYear={url_keys[3]}&studyProcessTerm={url_keys[4]}&courseCd={url_keys[5]}&userId={url_keys[6]}&companySeq={url_keys[7]}&adminYn={url_keys[8]}&nextUrl={url_keys[9]}&returnUrl={url_keys[10]}'
         driver.get(url_study)
+        print(f'[{time.strftime("%m/%d %H:%M:%S")}]:    START, "{course_list["과정명"][c]}"')
 
         while keep_course is True:
             driver.find_element(By.CLASS_NAME, 'btn.btn-study-sm.btn-primary').click()
@@ -76,11 +80,9 @@ for c in course_list.index:
             window_list = driver.window_handles
             driver.switch_to.window(window_list[1])
             time.sleep(2)
-            print('window switched')
 
             # alert accept (continue video)
             try:
-                print('trying alert acception')
                 driver.switch_to.alert.accept()
             except:
                 pass
@@ -117,6 +119,9 @@ for c in course_list.index:
                 score_fin = int(re.sub(r'[^0-9]', '', score_fin))
                 if score_ing >= score_fin:
                     keep_course = False
+                    print(f'[{time.strftime("%m/%d %H:%M:%S")}]: FINISHED, "{course_list["과정명"][c]}"')
+                else:
+                    print(f'       [{time.strftime("%H:%M:%S")}]: keep going')
             except:     # 30분 기다렸는데 alert 안 뜨면? 뭔가 영상 창에 문제가 생겼다거나? 일단 창을 끈다
                 try:
                     driver.switch_to.alert.accept()     # alert 있으면 accept 해주고
@@ -141,5 +146,10 @@ for c in course_list.index:
                 score_fin = int(re.sub(r'[^0-9]', '', score_fin))
                 if score_ing >= score_fin:
                     keep_course = False
+                    print(f'[{time.strftime("%m/%d %H:%M:%S")}]: FINISHED, "{course_list["과정명"][c]}"')
+                else:
+                    print(f'       [{time.strftime("%H:%M:%S")}]: keep going')
+
+driver.quit()
 
 # driver.switch_to.window(driver.window_handles[0])

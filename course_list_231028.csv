@@ -98,25 +98,25 @@
 98,정규강좌,시민교육,저작권,표절예방과 저작권 기초 강좌,3,TRUE,iframe,FALSE
 99,정규강좌,시민교육,저작권,[중등학부모] 저작권! 이제 기본입니다,3,TRUE,iframe,FALSE
 100,정규강좌,시민교육,저작권,[초등고학년/중등] 저작권과 친구 될래요,3,TRUE,iframe,FALSE
-101,정규강좌,시민교육,저작권,[초등저학년] 저작권과 친구 될래요,3,FALSE,iframe,FALSE
-102,정규강좌,시민교육,저작권,[초등학부모] 저작권! 이제 기본입니다,3,FALSE,iframe,FALSE
-103,정규강좌,시민교육,저작권,공공기관 소프트웨어 저작권&자산관리 이해,3,FALSE,iframe,FALSE
-104,정규강좌,시민교육,저작권,청소년 예비 창업자를 위한 저작권 노하우,3,FALSE,iframe,FALSE
-105,정규강좌,시민교육,저작권,어린이집 보육교사 과정,3,FALSE,iframe,FALSE
-106,정규강좌,외국어,영어,스낵영어네이티브: The Life 2.1 [초급],3,FALSE,iframe,FALSE
-107,정규강좌,외국어,영어,스낵영어네이티브: The Travel 3.1 [초중급],3,FALSE,iframe,FALSE
-108,정규강좌,외국어,영어,스낵영어네이티브: The Life 2.2 [초급],3,FALSE,iframe,FALSE
-109,정규강좌,외국어,영어,스낵영어네이티브: The Life 3.5 [초중급],3,FALSE,iframe,FALSE
-110,정규강좌,외국어,영어,스낵영어네이티브: The Travel 3.2 [초중급],3,FALSE,iframe,FALSE
-111,정규강좌,외국어,영어,스낵영어네이티브: The Life 2.3 [초급],3,FALSE,iframe,FALSE
-112,정규강좌,외국어,영어,스낵영어네이티브: The Life 2.4 [초급],3,FALSE,iframe,FALSE
-113,정규강좌,외국어,영어,스낵영어네이티브: The Life 3.3 [초중급],3,FALSE,iframe,FALSE
-114,정규강좌,외국어,영어,스낵영어네이티브: The Life 3.1 [초중급],3,FALSE,iframe,FALSE
-115,정규강좌,외국어,영어,스낵영어네이티브: The Life 3.2 [초중급],3,FALSE,iframe,FALSE
-116,정규강좌,외국어,영어,스낵영어네이티브: The Life 3.4 [초중급],3,FALSE,iframe,FALSE
-117,정규강좌,외국어,영어,스낵영어네이티브: The Life 3.6 [초중급],3,FALSE,iframe,FALSE
+101,정규강좌,시민교육,저작권,[초등저학년] 저작권과 친구 될래요,3,Pass,iframe,FALSE
+102,정규강좌,시민교육,저작권,[초등학부모] 저작권! 이제 기본입니다,3,TRUE,iframe,FALSE
+103,정규강좌,시민교육,저작권,공공기관 소프트웨어 저작권&자산관리 이해,3,TRUE,iframe,FALSE
+104,정규강좌,시민교육,저작권,청소년 예비 창업자를 위한 저작권 노하우,3,TRUE,iframe,FALSE
+105,정규강좌,시민교육,저작권,어린이집 보육교사 과정,3,TRUE,iframe,FALSE
+106,정규강좌,외국어,영어,스낵영어네이티브: The Life 2.1 [초급],3,TRUE,iframe,FALSE
+107,정규강좌,외국어,영어,스낵영어네이티브: The Travel 3.1 [초중급],3,TRUE,iframe,FALSE
+108,정규강좌,외국어,영어,스낵영어네이티브: The Life 2.2 [초급],3,TRUE,iframe,FALSE
+109,정규강좌,외국어,영어,스낵영어네이티브: The Life 3.5 [초중급],3,TRUE,iframe,FALSE
+110,정규강좌,외국어,영어,스낵영어네이티브: The Travel 3.2 [초중급],3,TRUE,iframe,FALSE
+111,정규강좌,외국어,영어,스낵영어네이티브: The Life 2.3 [초급],3,TRUE,iframe,FALSE
+112,정규강좌,외국어,영어,스낵영어네이티브: The Life 2.4 [초급],3,TRUE,iframe,FALSE
+113,정규강좌,외국어,영어,스낵영어네이티브: The Life 3.3 [초중급],3,TRUE,iframe,FALSE
+114,정규강좌,외국어,영어,스낵영어네이티브: The Life 3.1 [초중급],3,TRUE,iframe,FALSE
+115,정규강좌,외국어,영어,스낵영어네이티브: The Life 3.2 [초중급],3,TRUE,iframe,FALSE
+116,정규강좌,외국어,영어,스낵영어네이티브: The Life 3.4 [초중급],3,TRUE,iframe,FALSE
+117,정규강좌,외국어,영어,스낵영어네이티브: The Life 3.6 [초중급],3,TRUE,iframe,FALSE
 118,정규강좌,다문화,-,Magic Hangul Basic,3,TRUE,iframe,FALSE
-119,테마강좌,주민자치강좌,-,합리적 의사결정을 돕는 퍼실리테이션,3,FALSE,iframe,TRUE
+119,테마강좌,주민자치강좌,-,합리적 의사결정을 돕는 퍼실리테이션,3,TRUE,iframe,TRUE
 122,정규강좌,자격증,공인중개사,[2023 휴넷 공인중개사-1차] 민법 및 민사특별법-족집게특강,4,TRUE,frame,FALSE
 124,정규강좌,정보화/IT,인공지능,[IT어빌리티] 인공지능과 인간의 대화,4,TRUE,frame,FALSE
 125,정규강좌,정보화/IT,메타버스,[디지털융합] 가상세계로 떠나는 메타버스 튜토리얼,4,TRUE,frame,FALSE
@@ -126,17 +126,17 @@
 129,정규강좌,정보화/IT,디지털 트랜스포메이션,"[디지털융합] 제조혁신의 미래, 스마트팩토리",4,TRUE,129,FALSE
 130,정규강좌,정보화/IT,빅데이터,"데이터로 고객을 읽는 마케팅 기법, 그로스해킹",4,TRUE,130,FALSE
 131,정규강좌,정보화/IT,디지털 트랜스포메이션,[Tech briefing] 빅테크의 모든 것,4,TRUE,frame,FALSE
-132,정규강좌,취업,인생이모작,핵심만 콕! 재취업 준비와 성공전략,4,FALSE,iframe,FALSE
+132,정규강좌,취업,인생이모작,핵심만 콕! 재취업 준비와 성공전략,4,Pass,iframe,FALSE
 133,정규강좌,생활/인문교양,인문,미술의 마음,4,TRUE,frame,FALSE
 134,정규강좌,생활/인문교양,취미,여행을 이야기하다,4,TRUE,frame,FALSE
 135,정규강좌,생활/인문교양,인문,"미술, 창조사회를 말하다",4,TRUE,135,FALSE
 136,정규강좌,생활/인문교양,취미,인문학과 함께하는 비즈니스 트립,4,TRUE,frame,FALSE
-137,정규강좌,외국어,영어,스낵영어네이티브: The Travel 5.1 [중고급],4,FALSE,iframe,FALSE
-138,정규강좌,외국어,영어,스낵영어네이티브: The Travel 4.2 [중급],4,FALSE,iframe,FALSE
-139,정규강좌,외국어,영어,스낵영어네이티브: The Travel 5.2 [중고급],4,FALSE,iframe,FALSE
-140,정규강좌,외국어,영어,스낵영어네이티브: The Life 5.5 [중고급],4,FALSE,iframe,FALSE
-141,정규강좌,외국어,영어,스낵영어네이티브: The Life 5.6 [중고급],4,FALSE,iframe,FALSE
-142,정규강좌,외국어,일본어,일본 현지 성우와 함께 배우는 마법의 360문장 (1),4,FALSE,iframe,FALSE
+137,정규강좌,외국어,영어,스낵영어네이티브: The Travel 5.1 [중고급],4,TRUE,iframe,FALSE
+138,정규강좌,외국어,영어,스낵영어네이티브: The Travel 4.2 [중급],4,TRUE,iframe,FALSE
+139,정규강좌,외국어,영어,스낵영어네이티브: The Travel 5.2 [중고급],4,TRUE,iframe,FALSE
+140,정규강좌,외국어,영어,스낵영어네이티브: The Life 5.5 [중고급],4,TRUE,iframe,FALSE
+141,정규강좌,외국어,영어,스낵영어네이티브: The Life 5.6 [중고급],4,TRUE,iframe,FALSE
+142,정규강좌,외국어,일본어,일본 현지 성우와 함께 배우는 마법의 360문장 (1),4,Pass,iframe,FALSE
 143,정규강좌,외국어,영어,스낵영어네이티브: The Life 4.1 [중급],4,FALSE,iframe,FALSE
 144,정규강좌,외국어,영어,스낵영어네이티브: The Life 4.2 [중급],4,FALSE,iframe,FALSE
 145,정규강좌,외국어,영어,스낵영어네이티브: The Life 4.3 [중급],4,FALSE,iframe,FALSE
@@ -148,16 +148,16 @@
 151,정규강좌,외국어,영어,스낵영어네이티브: The Life 5.4 [중고급],4,FALSE,iframe,FALSE
 152,정규강좌,외국어,영어,스낵영어네이티브: The Travel 4.1 [중급],4,FALSE,iframe,FALSE
 153,정규강좌,외국어,영어,스낵영어네이티브: The Life 5.1 [중고급],4,FALSE,iframe,FALSE
-154,정규강좌,외국어,일본어,일본 현지 성우와 함께 배우는 마법의 360문장 (2),4,FALSE,iframe,FALSE
-155,정규강좌,외국어,일본어,일본 현지 성우와 함께 배우는 마법의 360문장 (3),4,FALSE,iframe,FALSE
+154,정규강좌,외국어,일본어,일본 현지 성우와 함께 배우는 마법의 360문장 (2),4,Pass,iframe,FALSE
+155,정규강좌,외국어,일본어,일본 현지 성우와 함께 배우는 마법의 360문장 (3),4,Pass,iframe,FALSE
 156,정규강좌,외국어,일본어,JLPT 한 권으로 끝내기 N2 - 청해,4,FALSE,iframe,FALSE
 157,정규강좌,외국어,영어,The 빠른 Toeic Speaking 실전 모의고사,4,FALSE,iframe,FALSE
 158,테마강좌,법정의무교육,필수교육,"[2022 법정필수교육] 4대 폭력 예방 (성희롱 예방, 성폭력 예방, 성매매 예방, 가정폭력 예방)",4,FALSE,iframe,FALSE
 159,테마강좌,법정의무교육,안전보건교육,모두의 안전을 위한 중대재해처벌법,4,TRUE,frame,FALSE
 160,정규강좌,자격증,공인중개사,[2022 휴넷공인중개사-1차] 부동산학개론 핵심요약,5,TRUE,frame,FALSE
-161,정규강좌,자격증,공인중개사,[2023 휴넷공인중개사-1차] 민법 및 민사특별법-심화이론,5,Pass,frame,FALSE
-162,정규강좌,자격증,공인중개사,[2022 휴넷공인중개사-1차] 민법 및 민사특별법-핵심요약,5,FALSE,frame,FALSE
-165,정규강좌,자격증,공인중개사,[2023 휴넷공인중개사-1차] 부동산학개론 심화이론,5,Pass,frame,FALSE
+161,정규강좌,자격증,공인중개사,[2023 휴넷공인중개사-1차] 민법 및 민사특별법-심화이론,5,TRUE,frame,FALSE
+162,정규강좌,자격증,공인중개사,[2022 휴넷공인중개사-1차] 민법 및 민사특별법-핵심요약,5,TRUE,frame,FALSE
+165,정규강좌,자격증,공인중개사,[2023 휴넷공인중개사-1차] 부동산학개론 심화이론,5,TRUE,frame,FALSE
 166,정규강좌,자격증,공인중개사,[2023 휴넷 공인중개사-1차] 부동산학개론-족집게특강,5,FALSE,frame,FALSE
 167,정규강좌,자격증,공인중개사,[2022 휴넷공인중개사-2차] 중개사법령 및 중개실무-핵심요약,5,FALSE,frame,FALSE
 170,정규강좌,자격증,공인중개사,[2023 휴넷공인중개사-2차] 부동산공시법-기출 문제풀이,5,FALSE,frame,FALSE

@@ -163,3 +163,4 @@ course_list['frame'] = frame
 
 course_list.to_csv(f'course_list_{time.strftime("%y%m%d")}_frame_4.csv', encoding='utf-8-sig')
 
+driver.quit()
