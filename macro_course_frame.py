@@ -54,20 +54,22 @@ time.sleep(1)
 # c = 468
 
 # 과정리스트 로드
-# filename = [x for x in os.listdir() if x.startswith('course_list')]
-# course_list = pd.read_csv(filename[-1], index_col=0)
-course_list = pd.read_csv('course_list_231025_frame_completion.csv', index_col=0)
+course_list = pd.read_csv(f'course_list_{time.strftime("%y%m%d")}.csv', index_col=0)
 # frame만 남기기
 idx_drop = [i for i in course_list.index if (course_list['frame'][i] != 'frame')|(course_list['수료여부'][i] != 'FALSE')]
 course_list = course_list.drop(index=idx_drop)
+print(course_list.head(5))
 
 # 마이페이지 리스트 긁어오기
 url_studying = 'https://gie.hunet.co.kr/Classroom/Studying'
 driver.get(url_studying)
-driver.implicitly_wait(10)
+driver.implicitly_wait(50)
 
 soup = BeautifulSoup(driver.page_source, 'html.parser')
+driver.set_window_size(1000, 1100)
+driver.set_window_position(800, 50)
 
+# c = 166
 for c in course_list.index:
     course_row = soup.find(string=course_list['과정명'][c]).parent.parent.parent.parent
     if course_row.find(string='학습중') is not None:
@@ -77,9 +79,11 @@ for c in course_list.index:
         url_keys = re.findall('"([^"]*)"', url_keys)
         url_study = f'http://study.hunet.co.kr/StudyLoadingCheck.aspx?processType={url_keys[0]}&courseType={url_keys[1]}&processCd={url_keys[2]}&studyProcessYear={url_keys[3]}&studyProcessTerm={url_keys[4]}&courseCd={url_keys[5]}&userId={url_keys[6]}&companySeq={url_keys[7]}&adminYn={url_keys[8]}&nextUrl={url_keys[9]}&returnUrl={url_keys[10]}'
         driver.get(url_study)
+        print(f'[{time.strftime("%m/%d %H:%M:%S")}]:    START, "{course_list["과정명"][c]}"')
 
         while keep_course is True:
-            driver.find_element(By.CLASS_NAME, 'btn.btn-study-sm.btn-primary').click()
+            if len(driver.window_handles) == 1:
+                driver.find_element(By.CLASS_NAME, 'btn.btn-study-sm.btn-primary').click()
             time.sleep(5)
 
             # switch window
@@ -96,30 +100,88 @@ for c in course_list.index:
             time.sleep(2)
 
             # video spdup
-            driver.switch_to.frame("main")
-            player_body = driver.find_element(By.ID, 'player_display')
-            player_button = driver.find_element(By.XPATH, '//*[@id="movieSpdUp"]')
-            driver.implicitly_wait(10)
-            for i in range(10):
-                ActionChains(driver).move_to_element(player_body).click(button).perform()
-                time.sleep(0.05)
-            driver.switch_to.default_content()
+            player_frame = driver.find_element(By.CSS_SELECTOR, 'html > frameset > frame:nth-child(1)')
+            driver.switch_to.frame(player_frame)
+            btn_div = driver.find_element(By.XPATH, '/html/body/form[1]/div[7]/div[1]/div[1]')
+            driver.execute_script("arguments[0].setAttribute('style', 'display: block;')", btn_div)
+            try:
+                spd = driver.find_element(By.XPATH, '//*[@id="movieSpdTxt"]').text[-3:]
+                spd = float(re.sub(r'[^0-9]', '', spd))
+                if spd < 2.0:
+                    for i in range(10):
+                        driver.find_element(By.XPATH, '//*[@id="movieSpdUp"]').click()
+                        time.sleep(0.005)
+            except:
+                pass
+            finally:
+                driver.switch_to.default_content()
 
-            # <다음 차시로 이동하겠습니까?> alert 기다림
+            # <다음 차시 바로가기> 화면 기다림
             wait_alert = WebDriverWait(driver, 1800)      # 30mins = 1800secs = 2배속이니까 1시간 분량 wait
-            alert_switch = wait_alert.until(expected_conditions.alert_is_present())
-            driver.switch_to.alert.accept()
-            driver.switch_to.window(window_list[1])
-            driver.close()      # 영상 창 close
-            driver.switch_to.window(window_list[0])
-            driver.refresh()    # <학습하기> 창 돌아와서 새로고침
+            try:
+                keep_going = True
+                while keep_going:
+                    driver.switch_to.window(driver.window_handles[1])
+                    try:
+                        player_frame = driver.find_element(By.CSS_SELECTOR, 'html > frameset > frame:nth-child(1)')
+                        driver.switch_to.frame(player_frame)
+                        driver.find_element(By.XPATH, '//*[@id="divNextInfoBox"]/div[2]/a').click()
+                        keep_going = False
+                    except:
+                        pass
 
-            # <학습하기> 창에서 진도율 체크
-            score_ing = driver.find_element(By.CLASS_NAME, 'text-warning.number').text
-            score_fin = driver.find_element(By.CLASS_NAME, 'text-legend').text
-            score_ing = int(re.sub(r'[^0-9]', '', score_ing))
-            score_fin = int(re.sub(r'[^0-9]', '', score_fin))
-            if score_ing < score_fin:
-                keep_course = True
+                # '다음 차시 바로가기' 누르면 '넘어가시겠습니까?' alert뜸
+                wait_alert.until(expected_conditions.alert_is_present())
+                driver.switch_to.alert.accept()     # window[1]에서 다음 차시 강의 진행됨
+                try: 
+                    driver.switch_to.alert.accept()   # 다 학습해야 넘어갈 수 있다 alert 뜨는 경우가 있음
+                except:
+                    pass
 
-# driver.switch_to.window(driver.window_handles[0])
+                # 진도율 체크
+                driver.switch_to.window(driver.window_handles[0])
+                driver.get(url_study)
+                try:              # <학습을 모두 완료하셨습니다> 창 있으면 끄기
+                    driver.find_element(By.XPATH, '//*[@id="div_survey_alarm_Contents"]/a').click()
+                except:
+                    pass
+                score_ing = driver.find_element(By.CLASS_NAME, 'text-warning.number').text
+                score_fin = driver.find_element(By.CLASS_NAME, 'text-legend').text
+                score_ing = int(re.sub(r'[^0-9]', '', score_ing))
+                score_fin = int(re.sub(r'[^0-9]', '', score_fin))
+                if score_ing >= score_fin:
+                    driver.switch_to.window(driver.window_handles[1])
+                    driver.close()
+                    driver.switch_to.window(driver.window_handles[0])
+                    keep_course = False 
+                    print(f'[{time.strftime("%m/%d %H:%M:%S")}]: FINISHED, "{course_list["과정명"][c]}"')
+                else:
+                    print(f'       [{time.strftime("%H:%M:%S")}]: keep going')
+            except:      # 30분 기다렸는데 alert 안 뜨면? 뭔가 영상 창에 문제가 생겼다거나? 일단 창을 끈다
+                try:
+                    driver.switch_to.alert.accept()     # alert 있으면 accept 해주기
+                except:
+                    pass
+                w_list = driver.window_handles
+                if len(w_list) > 1:                       # 영상 창이 그대로 남아있으면 (창 개수가 2개면)
+                    driver.switch_to.window(w_list[1])    # 영상 창으로 switch
+                    driver.close()                        # 영상 창 close
+                driver.switch_to.window(window_list[0])
+                driver.get(url_study)    # <학습하기> 창 돌아와서 새로고침
+
+                # <학습을 모두 완료하셨습니다> 창 있으면 끄기
+                try:
+                    driver.find_element(By.XPATH, '//*[@id="div_survey_alarm_Contents"]/a').click()
+                except:
+                    pass
+                # <학습하기> 창에서 진도율 체크
+                score_ing = driver.find_element(By.CLASS_NAME, 'text-warning.number').text
+                score_fin = driver.find_element(By.CLASS_NAME, 'text-legend').text
+                score_ing = int(re.sub(r'[^0-9]', '', score_ing))
+                score_fin = int(re.sub(r'[^0-9]', '', score_fin))
+                if score_ing >= score_fin:
+                    keep_course = False
+                    print(f'[{time.strftime("%m/%d %H:%M:%S")}]: FINISHED, "{course_list["과정명"][c]}"')
+                else:
+                    print(f'       [{time.strftime("%H:%M:%S")}]: keep going')
+

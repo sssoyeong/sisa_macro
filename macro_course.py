@@ -17,12 +17,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from bs4 import BeautifulSoup
 
 
-# 과정리스트 로드
-# filename = [x for x in os.listdir() if x.startswith('course_list')]
-# course_list = pd.read_csv(filename[-1], index_col=0)
-# course_list = pd.read_csv('course_list_231025_frame_completion.csv', index_col=0)
-course_list = pd.read_csv(f'course_list_{time.strftime("%y%m%d")}.csv', index_col=0)
-
 # 브라우저 꺼짐 방지 옵션
 chrome_options = Options()
 chrome_options.add_experimental_option("detach", True)
@@ -47,6 +41,8 @@ driver.find_element(By.NAME, 'PW').send_keys('q1w2e3^@!@')
 driver.find_element(By.CLASS_NAME, 'btn-login').click()
 time.sleep(1)
 
+# 과정리스트 로드
+course_list = pd.read_csv(f'course_list_{time.strftime("%y%m%d")}.csv', index_col=0)
 # iframe만 남기기
 idx_drop = [i for i in course_list.index if (course_list['frame'][i] != 'iframe')|(course_list['수료여부'][i] != "FALSE")]
 course_list = course_list.drop(index=idx_drop)
