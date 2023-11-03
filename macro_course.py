@@ -36,4 +36,4 @@ if course_row.find(string='학습중') is not None:
         else:
             pass
 
-# driver.switch_to.window(driver.window_handles[0])
+# driver.switch_to.window(driver.window_handles[1])

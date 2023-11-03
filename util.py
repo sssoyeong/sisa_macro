@@ -113,7 +113,7 @@ def spdup_iframe(driver):
     driver.find_element(By.ID, 'main').click()  # 재생시작
 
 
-def check_progress(driver):
+def check_progress(driver, url_study):
     driver.switch_to.window(driver.window_handles[0])
     driver.get(url_study)
     try:              # <학습을 모두 완료하셨습니다> 창 있으면 끄기
@@ -180,7 +180,7 @@ def studying_frame(driver, url_study):
             pass
 
         # 진도율 체크
-        keep_course = check_progress(driver)
+        keep_course = check_progress(driver, url_study)
     except:      # 30분 기다렸는데 alert 안 뜨면? 뭔가 영상 창에 문제가 생겼다거나? 일단 창을 끈다
         try:
             driver.switch_to.alert.accept()     # alert 있으면 accept 해주기
@@ -199,7 +199,7 @@ def studying_frame(driver, url_study):
         except:
             pass
         # <학습하기> 창에서 진도율 체크
-        keep_course = check_progress(driver)
+        keep_course = check_progress(driver, url_study)
     return keep_course
 
 
@@ -233,7 +233,7 @@ def studying_iframe(driver, url_study):
 
         # <학습을 모두 완료하셨습니다> 창 있으면 끄기
         shutdown_comp_window(driver)    
-        keep_course = check_progress(driver)
+        keep_course = check_progress(driver, url_study)
     except:     # 30분 기다렸는데 alert 안 뜨면? 뭔가 영상 창에 문제가 생겼다거나? 일단 창을 끈다
         try:
             driver.switch_to.alert.accept()     # alert 있으면 accept 해주고
@@ -248,6 +248,6 @@ def studying_iframe(driver, url_study):
 
         # <학습을 모두 완료하셨습니다> 창 있으면 끄기
         shutdown_comp_window(driver)
-        keep_course = check_progress()
+        keep_course = check_progress(driver, url_study)
     return keep_course
 
