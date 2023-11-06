@@ -13,7 +13,7 @@ c = 349, [2023 휴넷공인중개사-2차] 부동산공시법-기본이론
 c = 363, 2020 재경관리사 한 번에 착 붙는 재무회계 문제풀이
 
 """
-c = 349
+c = 363
 # for c in course_list.index:
 frame_type = course_list['frame'][c]
 course_name = course_list['과정명'][c]
@@ -30,7 +30,13 @@ if course_row.find(string='학습중') is not None:
     keep_course = True
     while keep_course is True:
         if frame_type == 'frame':
-            keep_course = studying_frame(driver, url_study)
+            player_frame = driver.find_element(By.CSS_SELECTOR, 'html > frameset > frame:nth-child(1)')
+            driver.switch_to.frame(player_frame)
+            try:
+                driver.find_element(By.CLASS_NAME, 'btn-tool')
+                keep_course = studying_frame_learningtool(driver, url_study)
+            except:
+                keep_course = studying_frame(driver, url_study)
         elif frame_type == 'iframe':
             keep_course = studying_iframe(driver, url_study)
         else:

@@ -203,6 +203,73 @@ def studying_frame(driver, url_study):
     return keep_course
 
 
+def studying_frame_learningtool(driver, url_study):
+    if len(driver.window_handles) == 1:
+        driver.find_element(By.CLASS_NAME, 'btn.btn-study-sm.btn-primary').click()
+    time.sleep(5)
+
+    # switch window
+    window_list = driver.window_handles
+    driver.switch_to.window(window_list[1])
+    time.sleep(2)
+
+    # alert accept (continue video)
+    try:
+        driver.switch_to.alert.accept()
+    except:
+        pass
+    driver.switch_to.window(window_list[1])
+    time.sleep(2)
+
+    # video spdup
+    spdup_frame(driver) 
+
+    # <다음 차시 바로가기> 화면 기다림
+    wait_alert = WebDriverWait(driver, 1800)      # 30mins = 1800secs = 2배속이니까 1시간 분량 wait
+    try:
+        keep_going = True
+        while keep_going:
+            driver.switch_to.window(driver.window_handles[1])
+            try:
+                player_frame = driver.find_element(By.CSS_SELECTOR, 'html > frameset > frame:nth-child(1)')
+                driver.switch_to.frame(player_frame)
+                driver.find_element(By.XPATH, '//*[@id="divNextInfoBox"]/div[2]/a').click()
+                keep_going = False
+            except:
+                pass
+
+        # '다음 차시 바로가기' 누르면 '넘어가시겠습니까?' alert뜸
+        wait_alert.until(expected_conditions.alert_is_present())
+        driver.switch_to.alert.accept()     # window[1]에서 다음 차시 강의 진행됨
+        try: 
+            driver.switch_to.alert.accept()   # 다 학습해야 넘어갈 수 있다 alert 뜨는 경우가 있음
+        except:
+            pass
+
+        # 진도율 체크
+        keep_course = check_progress(driver, url_study)
+    except:      # 30분 기다렸는데 alert 안 뜨면? 뭔가 영상 창에 문제가 생겼다거나? 일단 창을 끈다
+        try:
+            driver.switch_to.alert.accept()     # alert 있으면 accept 해주기
+        except:
+            pass
+        w_list = driver.window_handles
+        if len(w_list) > 1:                       # 영상 창이 그대로 남아있으면 (창 개수가 2개면)
+            driver.switch_to.window(w_list[1])    # 영상 창으로 switch
+            driver.close()                        # 영상 창 close
+        driver.switch_to.window(window_list[0])
+        driver.get(url_study)    # <학습하기> 창 돌아와서 새로고침
+
+        # <학습을 모두 완료하셨습니다> 창 있으면 끄기
+        try:
+            driver.find_element(By.XPATH, '//*[@id="div_survey_alarm_Contents"]/a').click()
+        except:
+            pass
+        # <학습하기> 창에서 진도율 체크
+        keep_course = check_progress(driver, url_study)
+    return keep_course
+
+
 def studying_iframe(driver, url_study):
     driver.find_element(By.CLASS_NAME, 'btn.btn-study-sm.btn-primary').click()
     time.sleep(5)
