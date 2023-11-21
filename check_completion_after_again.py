@@ -37,47 +37,34 @@ time.sleep(1)
 # 과정리스트 로드
 # yesterday = date.today() - timedelta(1)
 # course_list = pd.read_csv(f'course_list_{yesterday.strftime("%y%m%d")}.csv', index_col=0)
-course_list = pd.read_excel('시사점 과정리스트(231011)_차시.xlsx', header=3)
-course_list = course_list.drop(columns=['Unnamed: 0'])
-course_list.columns = ['대분류', '중분류', '소분류', '과정명', '학습시간']
+course_list = pd.read_csv('course_list_231121.csv', index_col=0)
+
 check = []
 for i in range(course_list.shape[0]):
-    check.append(True)
+    check.append(False)
 course_list['수료여부'] = check
-
+course_list['수료여부'] = course_list['수료여부'].convert_dtypes('boolean')
 
 # 완료한 것 체크
-# url_studyafter = 'https://gie.hunet.co.kr/Classroom/StudyAfter'
-# driver.get(url_studyafter)
-# driver.implicitly_wait(10)
-soup = BeautifulSoup(driver.page_source, 'html.parser')
-course_table = soup.select('table')
-
-# 어디까지 완료됐는지 체크
-url_studying = 'https://gie.hunet.co.kr/Classroom/Studying'
-driver.get(url_studying)
+url_studyafter = 'https://gie.hunet.co.kr/Classroom/StudyAfter'
+driver.get(url_studyafter)
 driver.implicitly_wait(10)
 
-soup = BeautifulSoup(driver.page_source, 'html.parser')
-course_table = soup.find('tbody')
-course_table_strong = course_table.find_all('strong')
-len(course_table_strong)
-print(course_table_strong[0], '\n', course_table_strong[1], '\n', course_table_strong[2], '\n', course_table_strong[3], '\n')
+for p in range(20):
+    list_temp = driver.find_elements(By.CLASS_NAME, 'left')
+    for c in range(len(list_temp)):
+        found_name = list_temp[c].text
+        if sum(course_list['과정명'] == found_name) == 0:
+            pass
+        else:
+            idx = course_list[course_list['과정명'] == found_name].index[0]
+            course_list.at[idx, '수료여부'] = True
+            print(f'{idx:0>3} :  {found_name}')
+    if p < 20:
+        driver.find_element(By.CLASS_NAME, 'next').click()
+        driver.implicitly_wait(10)
+        time.sleep(1)
 
-
-for i in range(46):
-    n_t = i * 4 + 1
-    found = course_table_strong[n_t].text
-
-    if sum(course_list['과정명'] == found) != 0:
-        idx = course_list[course_list['과정명'] == found].index[0]
-        course_list['수료여부'][idx] = False
-
-# drop = []
-# for n_l in range(course_list.shape[0]):
-#     if type(course_list['수료여부'][n_l]) != type(True):
-#         drop.append(n_l)
-# course_list = course_list.drop(index=drop)
 
 course_list.to_csv(f'course_list_{date.today().strftime("%y%m%d")}.csv', encoding='utf-8-sig')
 
