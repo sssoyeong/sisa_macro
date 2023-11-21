@@ -38,7 +38,6 @@ time.sleep(1)
 # yesterday = date.today() - timedelta(1)
 # course_list = pd.read_csv(f'course_list_{yesterday.strftime("%y%m%d")}.csv', index_col=0)
 course_list = pd.read_csv('course_list_231121.csv', index_col=0)
-
 check = []
 for i in range(course_list.shape[0]):
     check.append(False)
@@ -63,9 +62,9 @@ for p in range(20):
     if p < 20:
         driver.find_element(By.CLASS_NAME, 'next').click()
         driver.implicitly_wait(10)
-        time.sleep(1)
+        time.sleep(10)
 
 
-course_list.to_csv(f'course_list_{date.today().strftime("%y%m%d")}.csv', encoding='utf-8-sig')
+course_list.to_csv(f'course_list_{date.today().strftime("%y%m%d")}_new.csv', encoding='utf-8-sig')
 
 driver.quit()

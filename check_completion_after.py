@@ -36,10 +36,8 @@ time.sleep(1)
 
 # 과정리스트 로드
 # yesterday = date.today() - timedelta(1)
+course_list = pd.read_csv('course_list_231116.csv', index_col=0)
 # course_list = pd.read_csv(f'course_list_{yesterday.strftime("%y%m%d")}.csv', index_col=0)
-course_list = pd.read_excel('시사점 과정리스트(231011)_차시.xlsx', header=3)
-course_list = course_list.drop(columns=['Unnamed: 0'])
-course_list.columns = ['대분류', '중분류', '소분류', '과정명', '학습시간']
 check = []
 for i in range(course_list.shape[0]):
     check.append(True)
@@ -64,7 +62,6 @@ course_table_strong = course_table.find_all('strong')
 len(course_table_strong)
 print(course_table_strong[0], '\n', course_table_strong[1], '\n', course_table_strong[2], '\n', course_table_strong[3], '\n')
 
-
 for i in range(46):
     n_t = i * 4 + 1
     found = course_table_strong[n_t].text
@@ -72,12 +69,6 @@ for i in range(46):
     if sum(course_list['과정명'] == found) != 0:
         idx = course_list[course_list['과정명'] == found].index[0]
         course_list['수료여부'][idx] = False
-
-# drop = []
-# for n_l in range(course_list.shape[0]):
-#     if type(course_list['수료여부'][n_l]) != type(True):
-#         drop.append(n_l)
-# course_list = course_list.drop(index=drop)
 
 course_list.to_csv(f'course_list_{date.today().strftime("%y%m%d")}.csv', encoding='utf-8-sig')
 
