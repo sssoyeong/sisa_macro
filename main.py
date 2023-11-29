@@ -63,3 +63,9 @@ sum(course_list.loc[289:330]['학습시간'])*0.3/7     # 14.53 hours
 sum(course_list.loc[330:359]['학습시간'])         # 335 hours
 sum(course_list.loc[330:359]['학습시간'])*0.3/4   # 25.125 hours (보수적으로 4일 동안 했다고 잡음)
 
+
+#####
+# 2023.11.21 09시 ~ 2023.11.29 09시 (8일)
+# 318개 ~ 402개
+sum(course_list.loc[359:444]['학습시간'])         # 1465 hours
+sum(course_list.loc[359:444]['학습시간'])*0.3/8   # 54.9375 hours 
