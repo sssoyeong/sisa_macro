@@ -17,10 +17,7 @@ driver = webdriver.Chrome(options=chrome_options)
 url_home = 'https://gie.hunet.co.kr/Home'
 driver.get(url_home)
 
-driver.find_element(By.ID, 'Pop_14626').find_element(By.CLASS_NAME, 'iCheckbox').click()
-driver.find_element(By.ID, 'Pop_14602').find_element(By.CLASS_NAME, 'iCheckbox').click()
-driver.find_element(By.ID, 'Pop_14171').find_element(By.CLASS_NAME, 'iCheckbox').click()
-driver.find_element(By.ID, 'Pop_11243').find_element(By.CLASS_NAME, 'iCheckbox').click()
+driver.find_element(By.ID, 'Pop_15848').find_element(By.CLASS_NAME, 'iCheckbox').click()
 time.sleep(1)
 
 driver.find_element(By.NAME, 'ID').send_keys('cloudfishh')
@@ -29,15 +26,15 @@ driver.find_element(By.CLASS_NAME, 'btn-login').click()
 time.sleep(1)
 
 # course list page
-pagenum_normal = 19
+pagenum_normal = 16
 pagenum_theme = 4
 
 # page = 17
 for page in range(pagenum_normal):
     # page += 17
     # (위) 정규강좌, (아래) 테마강좌
-    url_courselist = f'https://gie.hunet.co.kr/Lecture/OnlineUX?category1=2&customNotIncategory=3#processLevel=&requiredType=&refundType=&contentsTime=&credit=&price=&sortColumn=best&sortDirection=desc&sortDefautlDirection=desc&shape=0&targetTypeNo=&categoryNo=0&ProcessType2=&onlyCpCdCategory=&category1=2&category2=&category3=&invitationType=&notInProcessType2=&customInCategory=&customNotInCategory=3&isGroup=Y&pageIndex={page}&totalCount=0&searchText=&PageSize=20'
-    # url_courselist = f'https://gie.hunet.co.kr/Lecture/OnlineUX?category1=3&customNotIncategory=2#processLevel=&requiredType=&refundType=&contentsTime=&credit=&price=&sortColumn=recent&sortDirection=desc&sortDefautlDirection=desc&shape=0&targetTypeNo=&categoryNo=0&ProcessType2=&onlyCpCdCategory=&category1=3&category2=&category3=&invitationType=&notInProcessType2=&customInCategory=&customNotInCategory=2&isGroup=Y&pageIndex={page}&totalCount=0&searchText=&PageSize=20'
+    # url_courselist = f'https://gie.hunet.co.kr/Lecture/OnlineUX?category1=2&customNotIncategory=3#processLevel=&requiredType=&refundType=&contentsTime=&credit=&price=&sortColumn=best&sortDirection=desc&sortDefautlDirection=desc&shape=0&targetTypeNo=&categoryNo=0&ProcessType2=&onlyCpCdCategory=&category1=2&category2=&category3=&invitationType=&notInProcessType2=&customInCategory=&customNotInCategory=3&isGroup=Y&pageIndex={page}&totalCount=0&searchText=&PageSize=20'
+    url_courselist = f'https://gie.hunet.co.kr/Lecture/OnlineUX?category1=3&customNotIncategory=2#processLevel=&requiredType=&refundType=&contentsTime=&credit=&price=&sortColumn=recent&sortDirection=desc&sortDefautlDirection=desc&shape=0&targetTypeNo=&categoryNo=0&ProcessType2=&onlyCpCdCategory=&category1=3&category2=&category3=&invitationType=&notInProcessType2=&customInCategory=&customNotInCategory=2&isGroup=Y&pageIndex={page}&totalCount=0&searchText=&PageSize=20'
 
     driver.get(url_courselist)
     time.sleep(1)
@@ -62,6 +59,17 @@ for page in range(pagenum_normal):
 
             driver.find_element(By.CLASS_NAME, 'button-big.b-orange').click()
             time.sleep(1)
+            try:
+                alert = driver.switch_to.alert
+                alert.accept()
+                time.sleep(1)
+            except:
+                pass
+            try:
+                driver.find_element(By.ID, 'chkConsentToThirdPartySharingAgree1').click()
+                time.sleep(1)
+            except:
+                pass
             driver.find_element(By.CLASS_NAME, 'button-big.b-black').click()
             time.sleep(2)
 
