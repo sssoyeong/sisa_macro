@@ -20,8 +20,8 @@ driver.get(url_home)
 driver.find_element(By.ID, 'Pop_15848').find_element(By.CLASS_NAME, 'iCheckbox').click()
 time.sleep(1)
 
-driver.find_element(By.NAME, 'ID').send_keys('cloudfishh')
-driver.find_element(By.NAME, 'PW').send_keys('q1w2e3^@!@')
+driver.find_element(By.NAME, 'ID').send_keys('sunghyun316')
+driver.find_element(By.NAME, 'PW').send_keys('878737')
 driver.find_element(By.CLASS_NAME, 'btn-login').click()
 time.sleep(1)
 
